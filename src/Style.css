@@ -1,0 +1,37 @@
+
+/* Nav */
+.Shopping-Cart {
+  border: 1px solid black;
+  width: 100px;
+  border-radius: 9px;
+  background: none;
+  height: 35px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer; 
+  position: absolute;        /* need to fix this later */
+  right: 50px;
+}
+.Shopping-Cart:hover {
+  background-color: black;
+}
+.Shopping-Cart div {
+  display: flex;
+  align-items: center;
+  column-gap: 3px;
+}
+.Shopping-Cart div :nth-child(2) {
+  border-radius: 30px;
+  background-color: black;
+  color: white;
+  width: 20px;
+  height: 20px;
+  font-size: 13.5px;
+}
+.Shopping-Cart * {
+  margin: 0;
+}
+
+
+/*  */
