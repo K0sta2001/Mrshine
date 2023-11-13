@@ -1,7 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@100;200;300;400;500;600;700;800;900&family=Noto+Serif+Georgian:wght@100;200;300;400;500;600;700;800&display=swap");
 
+
+
+
 body {
   margin: 0;
+}
+html *{
   font-family: "Noto Sans Georgian", sans-serif;
   font-family: "Noto Serif Georgian", serif;
 }

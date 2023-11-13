@@ -1,5 +1,6 @@
-import '../Style.css';
-import MainRoot from "./MainRoot.js"
+import "../Style.css";
+import MainRoot from "./MainRoot.js";
+import "../Dummy.css";
 
 function App() {
   return (

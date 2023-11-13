@@ -3,11 +3,9 @@ import GuestStack from "./GuestStack";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCoffee, faCheckSquare } from '@fortawesome/free-solid-svg-icons';
-import { faFontAwesome } from '@fortawesome/free-brands-svg-icons';
+import { faCoffee, faCheckSquare, faBars, faAngleDown, faFontAwesome } from '@fortawesome/free-solid-svg-icons';
 
-
-library.add(faCoffee, faCheckSquare, faFontAwesome);
+library.add(faCoffee, faCheckSquare, faFontAwesome, faBars, faAngleDown);
 
 
 export default function MainRoot() {
