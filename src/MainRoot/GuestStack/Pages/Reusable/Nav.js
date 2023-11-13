@@ -7,6 +7,7 @@ import { Input, Button } from "antd";
 
 export default function NavComponent() {
   const [isHovered, setIsHovered] = useState(false);
+  const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
 
   return (
     <div>
@@ -67,7 +68,7 @@ export default function NavComponent() {
         </Navbar.Collapse>
       </Navbar>
       <nav className="Nav2">
-        <div style={{display: "flex", alignItems: "center", width: "55%"}}>
+        <div style={{ display: "flex", alignItems: "center", width: "55%" }}>
           <div
             className="Nav2-Inner-Div"
             style={{
@@ -75,6 +76,9 @@ export default function NavComponent() {
               columnGap: "8px",
               alignItems: "center",
               cursor: "pointer",
+            }}
+            onClick={() => {
+              setDropdownIsVisible(true);
             }}
           >
             <FontAwesomeIcon
@@ -107,9 +111,17 @@ export default function NavComponent() {
             }
           />
         </div>
-        <div style={{display: "flex", alignItems: "center", width: "45%", justifyContent: "flex-end"}} className="Nav2-Inner-Div2">
-            {/* User profile coming soon */}
-            <p>ზაზას ნომერი</p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "45%",
+            justifyContent: "flex-end",
+          }}
+          className="Nav2-Inner-Div2"
+        >
+          {/* User profile coming soon */}
+          <p>ზაზას ნომერი</p>
         </div>
       </nav>
     </div>
