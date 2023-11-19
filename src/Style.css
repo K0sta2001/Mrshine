@@ -122,6 +122,9 @@
     left: 15px
   }
 }
+.slick-slider ul {
+  transform: translateX(3vw)
+}
 @media screen and (max-width: 500px) {
   .filter-dropdown {
     left: 2px;
@@ -129,8 +132,8 @@
   .filter-dropdown p{
     display: block;
   }
-}
-.slick-slider ul {
-  transform: translateX(4vw)
+  .slick-slider ul {
+    transform: translateX(6vw)
+  }
 }
 /*  */
