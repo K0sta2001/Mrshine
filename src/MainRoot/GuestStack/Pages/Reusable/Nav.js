@@ -78,7 +78,7 @@ export default function NavComponent() {
               cursor: "pointer",
             }}
             onClick={() => {
-              setDropdownIsVisible(true);
+              setDropdownIsVisible(!dropdownIsVisible);
             }}
           >
             <FontAwesomeIcon
@@ -92,6 +92,19 @@ export default function NavComponent() {
               style={{ color: "white" }}
               id="arrow-down"
             />
+          </div>
+          <div
+            className="filter-dropdown"
+            style={{
+              display: dropdownIsVisible ? "flex" : "none",
+            }}
+          >
+            <p>გათბობა</p>
+            <p>გათბობა</p>
+            <p>გათბობა</p>
+            <p>გათბობა</p>
+            <p>გათბობა</p>
+            <p>გათბობა</p>
           </div>
           <Input.Search
             placeholder="მოძებნე პროდუქტი"
