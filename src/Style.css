@@ -130,5 +130,7 @@
     display: block;
   }
 }
-
+.slick-slider ul {
+  transform: translateX(4vw)
+}
 /*  */
