@@ -2,12 +2,28 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, Button } from "antd";
+
+// Static images
+import companyLogo from "../../../../Images/logo.png";
 
 export default function NavComponent() {
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
+  const [navbarIsToggled, setNavbarIsToggled] = useState(false);
+
+  // catalog filters
+  const catalogFilters = [
+    "ფასდაკლებები",
+    "ელექტრო პროდუქცია",
+    "კლიმატური ტექნიკა",
+    "სანტექნიკი",
+    "ინსტრუმენტები",
+    "მშენებლობა",
+    "სხვადასხვა",
+  ];
+  const [currentCatalogFilter, setCurrentCatalogFilter] = useState(null);
 
   return (
     <div>
@@ -21,7 +37,13 @@ export default function NavComponent() {
         }}
         className="Nav1"
       >
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle
+          aria-controls="basic-navbar-nav"
+          onClick={() => {
+            setNavbarIsToggled(!navbarIsToggled);
+            setDropdownIsVisible(false);
+          }}
+        />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav
             className="ml-auto"
@@ -33,7 +55,11 @@ export default function NavComponent() {
           >
             <div className="Inner-Nav">
               <Nav.Link as={Link} to="/">
-                აქ წავა რაღაც ლოგო
+                <img
+                  src={companyLogo}
+                  alt="Mr Shine"
+                  style={{ width: "70px" }}
+                ></img>
               </Nav.Link>
               <Nav.Link as={Link} to="/">
                 მთავარი
@@ -78,7 +104,9 @@ export default function NavComponent() {
               cursor: "pointer",
             }}
             onClick={() => {
-              setDropdownIsVisible(!dropdownIsVisible);
+              if (!navbarIsToggled) {
+                setDropdownIsVisible(!dropdownIsVisible);
+              }
             }}
           >
             <FontAwesomeIcon
@@ -99,12 +127,24 @@ export default function NavComponent() {
               display: dropdownIsVisible ? "flex" : "none",
             }}
           >
-            <p>გათბობა</p>
-            <p>გათბობა</p>
-            <p>გათბობა</p>
-            <p>გათბობა</p>
-            <p>გათბობა</p>
-            <p>გათბობა</p>
+            {catalogFilters.map((filter, index) => {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setCurrentCatalogFilter(filter);
+                  }}
+                  style={{
+                    backgroundColor:
+                      filter === currentCatalogFilter ? "white" : "",
+                    color: filter === currentCatalogFilter ? "black" : "white",
+                    opacity: filter === currentCatalogFilter ? "0.8" : "1",
+                  }}
+                >
+                  {filter}
+                </div>
+              );
+            })}
           </div>
           <Input.Search
             placeholder="მოძებნე პროდუქტი"
@@ -134,7 +174,7 @@ export default function NavComponent() {
           className="Nav2-Inner-Div2"
         >
           {/* User profile coming soon */}
-          <p>ზაზას ნომერი</p>
+          <p>(+995) 558-500-508</p>
         </div>
       </nav>
     </div>

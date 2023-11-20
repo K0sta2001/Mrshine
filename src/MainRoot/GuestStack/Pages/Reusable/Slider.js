@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import cover from "../../../../Images/cover.png";
 
 const SliderComponent = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -17,22 +18,45 @@ const SliderComponent = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 6000,
+    autoplaySpeed: 4000,
     afterChange: (current) => setCurrentSlide(current),
   };
 
+  const slidesArr = [
+    cover,
+    cover,
+    cover,
+    cover,
+    cover,
+    cover,
+    cover,
+    cover,
+    cover,
+    cover,
+  ];
+
   return (
-    <div style={{ width: "90vw" }}>
+    <div style={{ width: "85vw", transform: "translateX(8vw)" }}>
       <Slider {...settings}>
-        <div>
-          <h3>Slide 1</h3>
-        </div>
-        <div>
-          <h3>Slide 2</h3>
-        </div>
-        <div>
-          <h3>Slide 3</h3>
-        </div>
+        {slidesArr.map((item, index) => {
+          return (
+            <div
+              key={index}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <img
+                src={item}
+                alt={"slide" + index}
+                style={{ width: "100%", maxHeight: "280px" }}
+              ></img>
+            </div>
+          );
+        })}
       </Slider>
       <div style={{ textAlign: "center", marginTop: "10px" }}>
         {Array.from({
