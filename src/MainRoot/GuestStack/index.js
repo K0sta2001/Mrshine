@@ -7,7 +7,7 @@ import { useState } from "react";
 export default function GuestStack() {
   // global
   const [cartItemsQuantity, setCartItemsQuantity] = useState(
-    JSON.parse(localStorage.getItem("@cartArr")).length || 0
+    JSON.parse(localStorage.getItem("@cartArr"))?.length || 0
   );
   //
 
