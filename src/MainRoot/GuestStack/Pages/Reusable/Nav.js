@@ -62,7 +62,7 @@ export default function NavComponent({ cartItemsArr }) {
     <div className="cart-items">
       {cartItemsArr.map((item, index) => {
         return (
-          <div className="cart-item" key={item.id + index*10} id={item.id}>
+          <div className="cart-item" key={item.id + index * 10} id={item.id}>
             <div className="cart-item-inner-div">
               <img src={item.imgSrc} alt={companyLogo}></img>
               <div>
@@ -70,7 +70,7 @@ export default function NavComponent({ cartItemsArr }) {
                 <p>{item.price + "₾"}</p>
               </div>
             </div>
-            <FontAwesomeIcon icon={faMinus} onClick={removeCartItem(item)} />
+            <FontAwesomeIcon icon={faMinus} />
           </div>
         );
       })}
