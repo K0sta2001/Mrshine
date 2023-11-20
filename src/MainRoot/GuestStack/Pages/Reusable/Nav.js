@@ -1,14 +1,15 @@
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faMinus } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { Input, Button } from "antd";
+import Popup from "../Reusable/Popup";
 
 // Static images
 import companyLogo from "../../../../Images/logo.png";
 
-export default function NavComponent({ cartItemsQuantity }) {
+export default function NavComponent({ cartItemsArr }) {
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
   const [navbarIsToggled, setNavbarIsToggled] = useState(false);
@@ -49,6 +50,34 @@ export default function NavComponent({ cartItemsQuantity }) {
     "სხვადასხვა",
   ];
   const [currentCatalogFilter, setCurrentCatalogFilter] = useState(null);
+  //
+
+  // cart component
+  // const removeCartItem = (item) => {
+
+  // };
+
+  const [isCartVisible, setIsCartVisible] = useState(false);
+  const cartComponent = (
+    <div className="cart-items">
+      {cartItemsArr.map((item, index) => {
+        return (
+          <div className="cart-item" key={item.id + index*10} id={item.id}>
+            <div className="cart-item-inner-div">
+              <img src={item.imgSrc} alt={companyLogo}></img>
+              <div>
+                <p>{item.name}</p>
+                <p>{item.price + "₾"}</p>
+              </div>
+            </div>
+            <FontAwesomeIcon icon={faMinus} onClick={removeCartItem(item)} />
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  //
 
   return (
     <div style={{ position: visible ? "" : "sticky", zIndex: "100", top: "0" }}>
@@ -99,6 +128,9 @@ export default function NavComponent({ cartItemsQuantity }) {
 
             <button
               className="Shopping-Cart"
+              onClick={() => {
+                setIsCartVisible(true);
+              }}
               onMouseOver={() => {
                 setIsHovered(true);
               }}
@@ -112,7 +144,7 @@ export default function NavComponent({ cartItemsQuantity }) {
               />
               <div>
                 <p style={{ color: isHovered ? "white" : "black" }}>Cart</p>
-                <p>{cartItemsQuantity}</p>
+                <p>{cartItemsArr.length}</p>
               </div>
             </button>
           </Nav>
@@ -202,6 +234,16 @@ export default function NavComponent({ cartItemsQuantity }) {
           <p>(+995) 558-500-508</p>
         </div>
       </nav>
+      <Popup
+        visible={isCartVisible}
+        className="cart-container"
+        onClose={() => {
+          setIsCartVisible(false);
+        }}
+        children={
+          cartItemsArr?.length === 0 ? "კალათა ცარიელია" : cartComponent
+        }
+      />
     </div>
   );
 }

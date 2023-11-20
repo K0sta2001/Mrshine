@@ -6,22 +6,24 @@ import { useState } from "react";
 
 export default function GuestStack() {
   // global
-  const [cartItemsQuantity, setCartItemsQuantity] = useState(
-    JSON.parse(localStorage.getItem("@cartArr"))?.length || 0
+  const [cartItems, setCartItems] = useState(
+    localStorage.getItem("@cartArr")
+      ? JSON.parse(localStorage.getItem("@cartArr"))
+      : []
   );
   //
 
   return (
     <div className="App-Container">
-      <NavComponent cartItemsQuantity={cartItemsQuantity} />
+      <NavComponent cartItemsArr={cartItems} />
       <SliderComponent />
       <Routes>
         <Route
           path="/"
           element={
             <Home
-              setCartItemsQuantity={(quantity) => {
-                setCartItemsQuantity(quantity);
+              setCartItems={(quantity) => {
+                setCartItems(quantity);
               }}
             />
           }

@@ -2,7 +2,7 @@ import logo from "../../../Images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbtack, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
-export default function Home({ setCartItemsQuantity }) {
+export default function Home({ setCartItems }) {
   const shoppingGoods = [
     {
       id: 1,
@@ -174,7 +174,7 @@ export default function Home({ setCartItemsQuantity }) {
     }
     cartArr.push(item);
     localStorage.setItem("@cartArr", JSON.stringify(cartArr));
-    setCartItemsQuantity(cartArr.length);
+    setCartItems(cartArr);
   };
 
   //
