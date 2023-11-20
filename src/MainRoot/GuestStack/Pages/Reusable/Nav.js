@@ -2,23 +2,48 @@ import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input, Button } from "antd";
 
 // Static images
 import companyLogo from "../../../../Images/logo.png";
 
-export default function NavComponent() {
+export default function NavComponent({ cartItemsQuantity }) {
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
   const [navbarIsToggled, setNavbarIsToggled] = useState(false);
+
+  // sticky navbar
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+
+      setVisible(
+        (prevScrollPos > currentScrollPos &&
+          prevScrollPos - currentScrollPos > 190) ||
+          currentScrollPos < 190
+      );
+
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [prevScrollPos]);
+  //
 
   // catalog filters
   const catalogFilters = [
     "ფასდაკლებები",
     "ელექტრო პროდუქცია",
     "კლიმატური ტექნიკა",
-    "სანტექნიკი",
+    "სანტექნიკა",
     "ინსტრუმენტები",
     "მშენებლობა",
     "სხვადასხვა",
@@ -26,7 +51,7 @@ export default function NavComponent() {
   const [currentCatalogFilter, setCurrentCatalogFilter] = useState(null);
 
   return (
-    <div>
+    <div style={{ position: visible ? "" : "sticky", zIndex: "100", top: "0" }}>
       <Navbar
         bg="light"
         expand="lg"
@@ -87,7 +112,7 @@ export default function NavComponent() {
               />
               <div>
                 <p style={{ color: isHovered ? "white" : "black" }}>Cart</p>
-                <p>0</p>
+                <p>{cartItemsQuantity}</p>
               </div>
             </button>
           </Nav>
