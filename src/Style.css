@@ -141,8 +141,5 @@
   .filter-dropdown div {
     display: block;
   }
-  .slick-slider ul {
-    transform: translateX(6vw);
-  }
 }
 /*  */
