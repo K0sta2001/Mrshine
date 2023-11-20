@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import cover from "../../../../Images/cover.png";
+import cover from "../../../../Images/cover.jpg";
 
 const SliderComponent = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
