@@ -53,6 +53,7 @@ const SliderComponent = () => {
                 src={item}
                 alt={"slide" + index}
                 style={{ width: "100%", maxHeight: "280px" }}
+                loading="lazy"
               ></img>
             </div>
           );
