@@ -19,6 +19,7 @@ export default function NavComponent({
   setCurrentCatalogFilter,
   handleSearch,
   setCartItems,
+  setIsContactFormVisibleFunc,
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
@@ -72,13 +73,35 @@ export default function NavComponent({
   };
   const cartComponent = (
     <div className="cart-items-container">
-      <p style={{ alignSelf: "flex-start" }}>
-        {"სულ: " +
-          cartItemsArr.reduce(
-            (totalQuantity, item) => totalQuantity + (item.quantity || 1),
-            0
-          )}
-      </p>
+      <div
+        style={{
+          display: "flex",
+          alignSelf: "flex-start",
+          alignItems: "center",
+          justifyContent: "space-between",
+          width: "100%",
+          padding: "10px 25px 10px 25px",
+          boxSizing: "border-box",
+        }}
+      >
+        <p>
+          {"სულ: " +
+            cartItemsArr.reduce(
+              (totalQuantity, item) => totalQuantity + (item.quantity || 1),
+              0
+            )}
+        </p>
+        <p>
+          {"ღირებულება: " +
+            cartItemsArr.reduce(
+              (totalPrice, item) =>
+                totalPrice + (item.quantity || 1) * item.price,
+              0
+            ) +
+            "₾"}
+        </p>
+      </div>
+
       <div className="cart-items">
         {cartItemsArr.map((item, index) => {
           const increment = (itemId) => {
@@ -98,7 +121,14 @@ export default function NavComponent({
                   ? { ...item, quantity: Math.max((item.quantity || 1) - 1, 0) }
                   : item
               );
-              return updatedItems.filter((item) => item.quantity !== 0);
+
+              const filteredItems = updatedItems.filter(
+                (item) => item.quantity !== 0
+              );
+
+              localStorage.setItem("@cartArr", JSON.stringify(filteredItems));
+
+              return filteredItems;
             });
           };
 
@@ -191,7 +221,7 @@ export default function NavComponent({
               <Nav.Link as={Link} to="/about">
                 ჩვენს შესახებ
               </Nav.Link>
-              <Nav.Link as={Link} to="/contact">
+              <Nav.Link onClick={()=>{setIsContactFormVisibleFunc()}}>
                 კონტაქტი
               </Nav.Link>
             </div>

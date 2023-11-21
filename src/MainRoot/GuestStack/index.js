@@ -4,6 +4,8 @@ import NavComponent from "./Pages/Reusable/Nav";
 import SliderComponent from "./Pages/Reusable/Slider";
 import { useState } from "react";
 import Footer from "./Pages/Reusable/Footer";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
 
 export default function GuestStack() {
   // global
@@ -25,6 +27,10 @@ export default function GuestStack() {
   };
   //
 
+  // handle contact form popup
+  const [isContactFormVisible, setIsContactFormVisible] = useState(false);
+  //
+
   return (
     <div className="App-Container">
       <NavComponent
@@ -33,6 +39,9 @@ export default function GuestStack() {
         setCurrentCatalogFilter={setCurrentCatalogFilter}
         handleSearch={handleSearch}
         setCartItems={setCartItems}
+        setIsContactFormVisibleFunc={() => {
+          setIsContactFormVisible(true);
+        }}
       />
       <SliderComponent />
       <Routes>
@@ -48,7 +57,14 @@ export default function GuestStack() {
             />
           }
         ></Route>
+        <Route path="/about" element={<About />}></Route>
       </Routes>
+      <Contact
+        formVisible={isContactFormVisible}
+        setIsContactFormVisibleFunc={() => {
+          setIsContactFormVisible(false);
+        }}
+      />
       <Footer />
     </div>
   );
