@@ -1,6 +1,8 @@
 import logo from "../../../Images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbtack, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import Popup from "./Reusable/Popup";
+import { useState } from "react";
 
 export default function Home({ setCartItems }) {
   const shoppingGoods = [
@@ -13,6 +15,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 60,
       isPinned: false,
       category: "ინსტრუმენტები",
+      code: "26442",
+      inStock: true,
     },
     {
       id: 2,
@@ -23,6 +27,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "ინსტრუმენტები",
+      code: "18562",
+      inStock: true,
     },
     {
       id: 3,
@@ -33,6 +39,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "მშენებლობა",
+      code: "42423",
+      inStock: true,
     },
     {
       id: 4,
@@ -43,6 +51,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "სხვადასხვა",
+      code: "97212",
+      inStock: true,
     },
     {
       id: 5,
@@ -53,6 +63,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: true,
       category: "კლიმატური ტექნიკა",
+      code: "12412",
+      inStock: true,
     },
     {
       id: 6,
@@ -63,6 +75,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "სანტექნიკა",
+      code: "78712",
+      inStock: true,
     },
     {
       id: 7,
@@ -73,6 +87,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "ელექტრონული ტექნიკა",
+      code: "40292",
+      inStock: true,
     },
     {
       id: 8,
@@ -83,6 +99,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 5,
       isPinned: true,
       category: "ინსტრუმენტები",
+      code: "31619",
+      inStock: true,
     },
     {
       id: 9,
@@ -93,6 +111,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "სანტექნიკა",
+      code: "06232",
+      inStock: false,
     },
     {
       id: 10,
@@ -103,6 +123,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 50,
       isPinned: true,
       category: "სანტექნიკა",
+      code: "12400",
+      inStock: true,
     },
     {
       id: 11,
@@ -113,6 +135,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "მშენებლობა",
+      code: "66212",
+      inStock: false,
     },
     {
       id: 12,
@@ -123,6 +147,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "სხვადასხვა",
+      code: "99245",
+      inStock: true,
     },
     {
       id: 13,
@@ -133,6 +159,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "სანტექნიკა",
+      code: "62368",
+      inStock: true,
     },
     {
       id: 14,
@@ -143,6 +171,8 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 20,
       isPinned: true,
       category: "მშენებლობა",
+      code: "47442",
+      inStock: false,
     },
     {
       id: 15,
@@ -153,16 +183,20 @@ export default function Home({ setCartItems }) {
       reducedPricePercentage: 0,
       isPinned: false,
       category: "კლიმატური ტექნიკა",
+      code: "12152",
+      inStock: true,
     },
     {
       id: 16,
       imgSrc: logo,
       name: "პროდუქტი 16",
       description: "ძალიან კარგი პროდუქტი",
-      price: 110,
-      reducedPricePercentage: 0,
+      price: 100,
+      reducedPricePercentage: 20,
       isPinned: true,
       category: "სანტექნიკა",
+      code: "12412",
+      inStock: false,
     },
   ];
 
@@ -176,7 +210,33 @@ export default function Home({ setCartItems }) {
     localStorage.setItem("@cartArr", JSON.stringify(cartArr));
     setCartItems(cartArr);
   };
+  //
 
+  // item info
+  const [isItemInfoVisible, setIsItemInfoVisible] = useState(false);
+  const [chosenItem, setChosenItem] = useState(null);
+  const showItemInfo = (item) => {
+    setChosenItem(item);
+    setIsItemInfoVisible(true);
+  };
+  const closeItemInfo = () => {
+    setChosenItem(null);
+    setIsItemInfoVisible(false);
+  };
+
+  const itemInfoComponent = (
+    id,
+    name,
+    imgSrc,
+    price,
+    reducedPricePercentage,
+    description,
+    category,
+    code,
+    inStock
+  ) => {
+    return <p>{name}</p>;
+  };
   //
 
   return (
@@ -184,7 +244,15 @@ export default function Home({ setCartItems }) {
       <div className="shopping-goods-container">
         {shoppingGoods.map((item, index) => {
           return (
-            <div className="shopping-good" key={item.id + index} id={item.id}>
+            <div
+              className={`shopping-good ${item.inStock ? "" : "out-of-stock"}`}
+              key={item.id + index}
+              id={item.id}
+              onClick={() => showItemInfo(item)}
+            >
+              {item.inStock ? null : (
+                <div className="out-of-stock-overlay">ამოიწურა</div>
+              )}
               <div className="shopping-good-innerdiv1">
                 <img src={item.imgSrc} alt={logo}></img>
                 {item.isPinned ? (
@@ -198,6 +266,16 @@ export default function Home({ setCartItems }) {
                 ) : (
                   ""
                 )}
+                {item.reducedPricePercentage ? (
+                  <p
+                    className="reduced-price-percentage"
+                    style={{ position: "absolute", top: "5px" }}
+                  >
+                    {"-" + item.reducedPricePercentage + "%"}
+                  </p>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="shopping-good-innerdiv2">
                 <div
@@ -208,13 +286,43 @@ export default function Home({ setCartItems }) {
                   }}
                 >
                   <p className="shopping-good-name">{item.name}</p>
-                  <p className="shopping-good-price">{item.price + "₾"}</p>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      columnGap: "8px",
+                    }}
+                  >
+                    <p
+                      className="shopping-good-price"
+                      style={{
+                        textDecoration: item.reducedPricePercentage
+                          ? "line-through"
+                          : "",
+                        opacity: item.reducedPricePercentage ? "0.7" : "1",
+                      }}
+                    >
+                      {item.price + "₾"}
+                    </p>
+                    {item.reducedPricePercentage ? (
+                      <p className="shopping-good-price">
+                        {(item.price * (100 - item.reducedPricePercentage)) /
+                          100 +
+                          "₾"}
+                      </p>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
                 <FontAwesomeIcon
                   icon={faShoppingCart}
                   alt="add"
-                  onClick={() => {
-                    addItemToCart(item);
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (item.inStock) {
+                      addItemToCart(item);
+                    }
                   }}
                 />
               </div>
@@ -222,6 +330,12 @@ export default function Home({ setCartItems }) {
           );
         })}
       </div>
+      <Popup
+        visible={isItemInfoVisible}
+        className="cart-container"
+        onClose={closeItemInfo}
+        children={itemInfoComponent(chosenItem?.id, chosenItem?.name)}
+      />
     </div>
   );
 }

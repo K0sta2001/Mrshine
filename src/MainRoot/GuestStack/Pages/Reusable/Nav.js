@@ -216,7 +216,7 @@ export default function NavComponent({ cartItemsArr }) {
                 }}
                 id="search-button"
               >
-                Search
+                ძებნა
               </Button>
             }
           />
