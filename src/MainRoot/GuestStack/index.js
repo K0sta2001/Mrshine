@@ -3,6 +3,7 @@ import Home from "./Pages/Home";
 import NavComponent from "./Pages/Reusable/Nav";
 import SliderComponent from "./Pages/Reusable/Slider";
 import { useState } from "react";
+import Footer from "./Pages/Reusable/Footer";
 
 export default function GuestStack() {
   // global
@@ -38,6 +39,7 @@ export default function GuestStack() {
           }
         ></Route>
       </Routes>
+      <Footer />
     </div>
   );
 }

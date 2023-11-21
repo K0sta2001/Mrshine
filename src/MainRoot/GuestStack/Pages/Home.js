@@ -334,7 +334,6 @@ export default function Home({ setCartItems, currentCatalogFilter }) {
   };
   //
 
-
   // Bad code on line 349. Fix it later.
   return (
     <div className="Home">
@@ -446,7 +445,17 @@ export default function Home({ setCartItems, currentCatalogFilter }) {
               );
             })
         ) : (
-          <p>აღნიშნული კატეგორიის პროდუქტი მარაგში არაა.</p>
+          <div
+            style={{
+              width: "100vw",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ textAlign: "center" }}>
+              აღნიშნული კატეგორიის პროდუქტი მარაგში არაა.
+            </p>
+          </div>
         )}
       </div>
       <Popup

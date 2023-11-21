@@ -199,7 +199,6 @@ export default function NavComponent({
                 <div
                   key={index}
                   onClick={() => {
-                    console.log(filter);
                     if (currentCatalogFilter === filter) {
                       setCurrentCatalogFilter(null);
                     } else {
