@@ -235,7 +235,91 @@ export default function Home({ setCartItems }) {
     code,
     inStock
   ) => {
-    return <p>{name}</p>;
+    return (
+      <div className="shopping-good-info" id={id}>
+        <div className="shopping-good-info-innerdiv1">
+          <img src={imgSrc} alt={logo}></img>
+          <p
+            className="reduced-price-percentage"
+            style={{ position: "absolute", top: "5px", left: "5px" }}
+          >
+            {reducedPricePercentage ? "-" + reducedPricePercentage + "%" : ""}
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <p style={{ fontWeight: "800" }}>{name}</p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: "6px",
+              }}
+            >
+              <p>ფასი: </p>
+              <p
+                style={{
+                  textDecoration: reducedPricePercentage ? "line-through" : "",
+                  opacity: reducedPricePercentage ? "0.7" : "1",
+                }}
+              >
+                {price + "₾"}
+              </p>
+              {reducedPricePercentage ? (
+                <p style={{ fontSize: "21px" }}>
+                  {(price * (100 - reducedPricePercentage)) / 100 + "₾"}
+                </p>
+              ) : (
+                ""
+              )}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                columnGap: "4px",
+              }}
+            >
+              <p style={{ fontWeight: "400" }}>
+                {inStock ? "მარაგშია" : "ამოიწურა"}
+              </p>
+              {inStock ? (
+                <FontAwesomeIcon
+                  icon={faShoppingCart}
+                  alt={"add"}
+                  className="shopping-cart-add"
+                  id="shopping-cart-add-info"
+                  onClick={() => {
+                    if (inStock) {
+                      addItemToCart(chosenItem);
+                    }
+                  }}
+                />
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="shopping-good-info-innerdiv2">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p>
+            <div className="shopping-good-info-description">{description}</div>
+          </div>
+          <p>კატეგორია: {category}</p>
+        </div>
+      </div>
+    );
   };
   //
 
@@ -318,6 +402,7 @@ export default function Home({ setCartItems }) {
                 <FontAwesomeIcon
                   icon={faShoppingCart}
                   alt="add"
+                  className="shopping-cart-add"
                   onClick={(event) => {
                     event.stopPropagation();
                     if (item.inStock) {
@@ -332,9 +417,18 @@ export default function Home({ setCartItems }) {
       </div>
       <Popup
         visible={isItemInfoVisible}
-        className="cart-container"
         onClose={closeItemInfo}
-        children={itemInfoComponent(chosenItem?.id, chosenItem?.name)}
+        children={itemInfoComponent(
+          chosenItem?.id,
+          chosenItem?.name,
+          chosenItem?.imgSrc,
+          chosenItem?.price,
+          chosenItem?.reducedPricePercentage,
+          chosenItem?.description,
+          chosenItem?.category,
+          chosenItem?.code,
+          chosenItem?.inStock
+        )}
       />
     </div>
   );

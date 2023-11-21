@@ -150,7 +150,14 @@ export default function NavComponent({ cartItemsArr }) {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      <nav className="Nav2">
+      <nav
+        className="Nav2"
+        onClick={() => {
+          if (window.location.pathname !== "/") {
+            window.location.pathname = "/";
+          }
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", width: "55%" }}>
           <div
             className="Nav2-Inner-Div"

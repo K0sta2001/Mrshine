@@ -283,12 +283,61 @@
   font-size: 14px;
   font-weight: 800;
 }
-.cart-item svg {
+.shopping-cart-add {
   cursor: pointer;
   z-index: 50;
   padding: 5px;
   box-sizing: border-box;
   border: 1px solid rgb(61, 45, 45);
   border-radius: 15px;
+}
+#shopping-cart-add-info:hover {
+  background-color: black;
+  color: white;
+}
+/*  */
+
+/* shopping good detailed info */
+.shopping-good-info {
+  position: relative;
+  width: 100%;
+  padding: 5px 0 5px 0;
+  display: flex;
+  column-gap: 16px;
+  max-height: 500px;
+}
+.shopping-good-info * {
+  margin: 0;
+}
+.shopping-good-info-innerdiv1 {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  align-items: center;
+  position: relative;
+}
+.shopping-good-info-innerdiv1 img {
+  max-width: 230px;
+  min-width: 130px;
+  width: 50%;
+  border-radius: 5px;
+}
+.shopping-good-info-innerdiv1 p {
+  font-size: 17px;
+  font-weight: 800
+}
+.shopping-good-info-innerdiv2 {
+  display: flex;
+  flex-direction: column;
+  row-gap: 3px;
+  position: relative;
+  justify-content: space-between;
+  margin-top: 7px;
+}
+.shopping-good-info-description {
+  max-height: 350px;
+  min-width: 190px;
+  text-wrap: wrap;
+  font-weight: 500
 }
 /*  */
