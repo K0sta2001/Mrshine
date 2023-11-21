@@ -4,7 +4,7 @@ import { faThumbtack, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Popup from "./Reusable/Popup";
 import { useState } from "react";
 
-export default function Home({ setCartItems }) {
+export default function Home({ setCartItems, currentCatalogFilter }) {
   const shoppingGoods = [
     {
       id: 1,
@@ -200,6 +200,16 @@ export default function Home({ setCartItems }) {
     },
   ];
 
+  const sortedGoods = shoppingGoods.slice().sort((a, b) => {
+    if (a.isPinned !== b.isPinned) {
+      return b.isPinned - a.isPinned;
+    } else if (a.reducedPricePercentage !== b.reducedPricePercentage) {
+      return b.reducedPricePercentage - a.reducedPricePercentage;
+    } else {
+      return 0;
+    }
+  });
+
   // shopping cart
   const addItemToCart = (item) => {
     let cartArr = JSON.parse(localStorage.getItem("@cartArr")) || [];
@@ -311,7 +321,7 @@ export default function Home({ setCartItems }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              rowGap: "6px"
+              rowGap: "6px",
             }}
           >
             <p>კატეგორია: {category}</p>
@@ -324,101 +334,125 @@ export default function Home({ setCartItems }) {
   };
   //
 
+
+  // Bad code on line 349. Fix it later.
   return (
     <div className="Home">
       <div className="shopping-goods-container">
-        {shoppingGoods.map((item, index) => {
-          return (
-            <div
-              className={`shopping-good ${item.inStock ? "" : "out-of-stock"}`}
-              key={item.id + index}
-              id={item.id}
-              onClick={() => showItemInfo(item)}
-            >
-              {item.inStock ? null : (
-                <div className="out-of-stock-overlay">ამოიწურა</div>
-              )}
-              <div className="shopping-good-innerdiv1">
-                <img src={item.imgSrc} alt={logo}></img>
-                {item.isPinned ? (
-                  <FontAwesomeIcon
-                    icon={faThumbtack}
-                    style={{
-                      position: "absolute",
-                      transform: "translate(-10px, 10px)",
-                    }}
-                  />
-                ) : (
-                  ""
-                )}
-                {item.reducedPricePercentage ? (
-                  <p
-                    className="reduced-price-percentage"
-                    style={{ position: "absolute", top: "5px" }}
-                  >
-                    {"-" + item.reducedPricePercentage + "%"}
-                  </p>
-                ) : (
-                  ""
-                )}
-              </div>
-              <div className="shopping-good-innerdiv2">
+        {sortedGoods.filter(
+          (item) =>
+            !currentCatalogFilter ||
+            item.category === currentCatalogFilter ||
+            (item.reducedPricePercentage > 0 &&
+              currentCatalogFilter === "ფასდაკლებები")
+        ).length > 0 ? (
+          sortedGoods
+            .filter(
+              (item) =>
+                !currentCatalogFilter ||
+                item.category === currentCatalogFilter ||
+                (item.reducedPricePercentage > 0 &&
+                  currentCatalogFilter === "ფასდაკლებები")
+            )
+            .map((item, index) => {
+              return (
                 <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    rowGap: "3px",
-                  }}
+                  className={`shopping-good ${
+                    item.inStock ? "" : "out-of-stock"
+                  }`}
+                  key={item.id + Math.random()}
+                  id={item.id}
+                  onClick={() => showItemInfo(item)}
                 >
-                  <p className="shopping-good-name">{item.name}</p>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      columnGap: "8px",
-                    }}
-                  >
-                    <p
-                      className="shopping-good-price"
-                      style={{
-                        textDecoration: item.reducedPricePercentage
-                          ? "line-through"
-                          : "",
-                        opacity: item.reducedPricePercentage ? "0.7" : "1",
-                      }}
-                    >
-                      {item.price + "₾"}
-                    </p>
+                  {item.inStock ? null : (
+                    <div className="out-of-stock-overlay">ამოიწურა</div>
+                  )}
+                  <div className="shopping-good-innerdiv1">
+                    <img src={item.imgSrc} alt={logo}></img>
+                    {item.isPinned ? (
+                      <FontAwesomeIcon
+                        icon={faThumbtack}
+                        style={{
+                          position: "absolute",
+                          transform: "translate(-10px, 10px)",
+                        }}
+                      />
+                    ) : (
+                      ""
+                    )}
                     {item.reducedPricePercentage ? (
-                      <p className="shopping-good-price">
-                        {(item.price * (100 - item.reducedPricePercentage)) /
-                          100 +
-                          "₾"}
+                      <p
+                        className="reduced-price-percentage"
+                        style={{ position: "absolute", top: "5px" }}
+                      >
+                        {"-" + item.reducedPricePercentage + "%"}
                       </p>
                     ) : (
                       ""
                     )}
                   </div>
+                  <div className="shopping-good-innerdiv2">
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        rowGap: "3px",
+                      }}
+                    >
+                      <p className="shopping-good-name">{item.name}</p>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          columnGap: "8px",
+                        }}
+                      >
+                        <p
+                          className="shopping-good-price"
+                          style={{
+                            textDecoration: item.reducedPricePercentage
+                              ? "line-through"
+                              : "",
+                            opacity: item.reducedPricePercentage ? "0.7" : "1",
+                          }}
+                        >
+                          {item.price + "₾"}
+                        </p>
+                        {item.reducedPricePercentage ? (
+                          <p className="shopping-good-price">
+                            {(item.price *
+                              (100 - item.reducedPricePercentage)) /
+                              100 +
+                              "₾"}
+                          </p>
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                    </div>
+                    <FontAwesomeIcon
+                      icon={faShoppingCart}
+                      alt="add"
+                      className="shopping-cart-add"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        if (item.inStock) {
+                          addItemToCart(item);
+                        }
+                      }}
+                    />
+                  </div>
                 </div>
-                <FontAwesomeIcon
-                  icon={faShoppingCart}
-                  alt="add"
-                  className="shopping-cart-add"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    if (item.inStock) {
-                      addItemToCart(item);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-          );
-        })}
+              );
+            })
+        ) : (
+          <p>აღნიშნული კატეგორიის პროდუქტი მარაგში არაა.</p>
+        )}
       </div>
       <Popup
         visible={isItemInfoVisible}
         onClose={closeItemInfo}
+        modalClass="item-info-popup-component"
         children={itemInfoComponent(
           chosenItem?.id,
           chosenItem?.name,

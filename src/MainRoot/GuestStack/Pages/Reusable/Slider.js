@@ -36,8 +36,16 @@ const SliderComponent = () => {
   ];
 
   return (
-    <div style={{ width: "85vw", transform: "translateX(8vw)" }}>
-      <Slider {...settings}>
+    <div
+      style={{
+        width: "70vw",
+        transform: "translateX(14.7vw)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Slider {...settings} style={{ width: "100%" }}>
         {slidesArr.map((item, index) => {
           return (
             <div
@@ -52,7 +60,7 @@ const SliderComponent = () => {
               <img
                 src={item}
                 alt={"slide" + index}
-                style={{ width: "100%", maxHeight: "280px" }}
+                style={{ width: "100%", maxHeight: "380px" }}
                 loading="lazy"
               ></img>
             </div>

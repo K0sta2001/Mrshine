@@ -6,16 +6,24 @@ import { useState } from "react";
 
 export default function GuestStack() {
   // global
+  // cart
   const [cartItems, setCartItems] = useState(
     localStorage.getItem("@cartArr")
       ? JSON.parse(localStorage.getItem("@cartArr"))
       : []
   );
+
+  // catalog filter
+  const [currentCatalogFilter, setCurrentCatalogFilter] = useState(null);
   //
 
   return (
     <div className="App-Container">
-      <NavComponent cartItemsArr={cartItems} />
+      <NavComponent
+        cartItemsArr={cartItems}
+        currentCatalogFilter={currentCatalogFilter}
+        setCurrentCatalogFilter={setCurrentCatalogFilter}
+      />
       <SliderComponent />
       <Routes>
         <Route
@@ -25,6 +33,7 @@ export default function GuestStack() {
               setCartItems={(quantity) => {
                 setCartItems(quantity);
               }}
+              currentCatalogFilter={currentCatalogFilter}
             />
           }
         ></Route>

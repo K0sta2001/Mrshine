@@ -9,7 +9,11 @@ import Popup from "../Reusable/Popup";
 // Static images
 import companyLogo from "../../../../Images/logo.png";
 
-export default function NavComponent({ cartItemsArr }) {
+export default function NavComponent({
+  cartItemsArr,
+  currentCatalogFilter,
+  setCurrentCatalogFilter,
+}) {
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
   const [navbarIsToggled, setNavbarIsToggled] = useState(false);
@@ -49,7 +53,6 @@ export default function NavComponent({ cartItemsArr }) {
     "მშენებლობა",
     "სხვადასხვა",
   ];
-  const [currentCatalogFilter, setCurrentCatalogFilter] = useState(null);
   //
 
   // cart component
@@ -196,7 +199,12 @@ export default function NavComponent({ cartItemsArr }) {
                 <div
                   key={index}
                   onClick={() => {
-                    setCurrentCatalogFilter(filter);
+                    console.log(filter);
+                    if (currentCatalogFilter === filter) {
+                      setCurrentCatalogFilter(null);
+                    } else {
+                      setCurrentCatalogFilter(filter);
+                    }
                   }}
                   style={{
                     backgroundColor:

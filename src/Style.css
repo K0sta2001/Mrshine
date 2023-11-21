@@ -152,6 +152,7 @@
   align-items: center;
   padding: 15px;
   box-sizing: border-box;
+  min-height: 150px;
 }
 .shopping-goods-container {
   width: 100%;
