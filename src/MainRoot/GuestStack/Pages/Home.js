@@ -311,12 +311,13 @@ export default function Home({ setCartItems }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              rowGap: "6px"
             }}
           >
-            <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p>
+            <p>კატეგორია: {category}</p>
             <div className="shopping-good-info-description">{description}</div>
           </div>
-          <p>კატეგორია: {category}</p>
+          <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p>
         </div>
       </div>
     );

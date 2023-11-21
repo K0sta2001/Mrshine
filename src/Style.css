@@ -295,6 +295,12 @@
   background-color: black;
   color: white;
 }
+.cart-items svg {
+  padding: 4px;
+  border-radius: 40px;
+  border: 1px solid black;
+  cursor: pointer;
+}
 /*  */
 
 /* shopping good detailed info */
@@ -305,6 +311,12 @@
   display: flex;
   column-gap: 16px;
   max-height: 500px;
+}
+@media screen and (max-width: 500px) {
+  .shopping-good-info {
+    flex-direction: column;
+    max-height: 700px;
+  }
 }
 .shopping-good-info * {
   margin: 0;
@@ -333,6 +345,13 @@
   position: relative;
   justify-content: space-between;
   margin-top: 7px;
+}
+@media screen and (max-width: 500px) {
+  .shopping-good-info-innerdiv2 {
+    align-items: center;
+    margin: 0;
+    row-gap: 15px;
+  }
 }
 .shopping-good-info-description {
   max-height: 350px;
