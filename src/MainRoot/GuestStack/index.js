@@ -18,12 +18,21 @@ export default function GuestStack() {
   const [currentCatalogFilter, setCurrentCatalogFilter] = useState(null);
   //
 
+  // handle search
+  const [searchKeyWord, setSearchKeyWord] = useState("");
+  const handleSearch = (word) => {
+    setSearchKeyWord(word);
+  };
+  //
+
   return (
     <div className="App-Container">
       <NavComponent
         cartItemsArr={cartItems}
         currentCatalogFilter={currentCatalogFilter}
         setCurrentCatalogFilter={setCurrentCatalogFilter}
+        handleSearch={handleSearch}
+        setCartItems={setCartItems}
       />
       <SliderComponent />
       <Routes>
@@ -35,6 +44,7 @@ export default function GuestStack() {
                 setCartItems(quantity);
               }}
               currentCatalogFilter={currentCatalogFilter}
+              searchKeyWord={searchKeyWord}
             />
           }
         ></Route>

@@ -4,7 +4,11 @@ import { faThumbtack, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Popup from "./Reusable/Popup";
 import { useState } from "react";
 
-export default function Home({ setCartItems, currentCatalogFilter }) {
+export default function Home({
+  setCartItems,
+  currentCatalogFilter,
+  searchKeyWord,
+}) {
   const shoppingGoods = [
     {
       id: 1,
@@ -213,10 +217,19 @@ export default function Home({ setCartItems, currentCatalogFilter }) {
   // shopping cart
   const addItemToCart = (item) => {
     let cartArr = JSON.parse(localStorage.getItem("@cartArr")) || [];
-    if (!Array.isArray(cartArr)) {
-      cartArr = [];
+  
+    const existingItemIndex = cartArr.findIndex(
+      (cartItem) => cartItem.id === item.id && cartItem.name === item.name
+    );
+  
+    if (existingItemIndex !== -1) {
+      cartArr[existingItemIndex].quantity =
+        (cartArr[existingItemIndex].quantity || 1) + 1;
+    } else {
+      item.quantity = 1;
+      cartArr.push(item);
     }
-    cartArr.push(item);
+  
     localStorage.setItem("@cartArr", JSON.stringify(cartArr));
     setCartItems(cartArr);
   };
@@ -338,28 +351,40 @@ export default function Home({ setCartItems, currentCatalogFilter }) {
   return (
     <div className="Home">
       <div className="shopping-goods-container">
-        {sortedGoods.filter(
-          (item) =>
+        {sortedGoods.filter((item) => {
+          const nameMatch =
+            !searchKeyWord ||
+            item.name.toLowerCase().includes(searchKeyWord.toLowerCase());
+
+          const catalogFilterMatch =
             !currentCatalogFilter ||
             item.category === currentCatalogFilter ||
             (item.reducedPricePercentage > 0 &&
-              currentCatalogFilter === "ფასდაკლებები")
-        ).length > 0 ? (
+              currentCatalogFilter === "ფასდაკლებები");
+
+          return nameMatch && catalogFilterMatch;
+        }).length > 0 ? (
           sortedGoods
-            .filter(
-              (item) =>
+            .filter((item) => {
+              const nameMatch =
+                !searchKeyWord ||
+                item.name.toLowerCase().includes(searchKeyWord.toLowerCase());
+
+              const catalogFilterMatch =
                 !currentCatalogFilter ||
                 item.category === currentCatalogFilter ||
                 (item.reducedPricePercentage > 0 &&
-                  currentCatalogFilter === "ფასდაკლებები")
-            )
+                  currentCatalogFilter === "ფასდაკლებები");
+
+              return nameMatch && catalogFilterMatch;
+            })
             .map((item, index) => {
               return (
                 <div
                   className={`shopping-good ${
                     item.inStock ? "" : "out-of-stock"
                   }`}
-                  key={item.id + Math.random()}
+                  key={item.id + Math.random() + index}
                   id={item.id}
                   onClick={() => showItemInfo(item)}
                 >

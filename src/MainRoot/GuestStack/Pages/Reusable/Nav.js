@@ -1,7 +1,11 @@
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faMinus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faShoppingCart,
+  faMinus,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 import { Input, Button } from "antd";
 import Popup from "../Reusable/Popup";
@@ -13,6 +17,8 @@ export default function NavComponent({
   cartItemsArr,
   currentCatalogFilter,
   setCurrentCatalogFilter,
+  handleSearch,
+  setCartItems,
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
@@ -61,25 +67,86 @@ export default function NavComponent({
   // };
 
   const [isCartVisible, setIsCartVisible] = useState(false);
+  const purchaseItem = () => {
+    setIsCartVisible(false);
+  };
   const cartComponent = (
-    <div className="cart-items">
-      {cartItemsArr.map((item, index) => {
-        return (
-          <div className="cart-item" key={item.id + index * 10} id={item.id}>
-            <div className="cart-item-inner-div">
-              <img src={item.imgSrc} alt={companyLogo}></img>
-              <div>
-                <p>{item.name}</p>
-                <p>{item.price + "₾"}</p>
+    <div className="cart-items-container">
+      <p style={{ alignSelf: "flex-start" }}>
+        {"სულ: " +
+          cartItemsArr.reduce(
+            (totalQuantity, item) => totalQuantity + (item.quantity || 1),
+            0
+          )}
+      </p>
+      <div className="cart-items">
+        {cartItemsArr.map((item, index) => {
+          const increment = (itemId) => {
+            setCartItems((prevItems) => {
+              return prevItems.map((item) =>
+                getItemIdentifier(item) === itemId
+                  ? { ...item, quantity: (item.quantity || 1) + 1 }
+                  : item
+              );
+            });
+          };
+
+          const reduce = (itemId) => {
+            setCartItems((prevItems) => {
+              const updatedItems = prevItems.map((item) =>
+                getItemIdentifier(item) === itemId
+                  ? { ...item, quantity: Math.max((item.quantity || 1) - 1, 0) }
+                  : item
+              );
+              return updatedItems.filter((item) => item.quantity !== 0);
+            });
+          };
+
+          const getItemIdentifier = (item) => `${item.id}-${item.name}`;
+          return (
+            <div className="cart-item" key={item.id + index * 10} id={item.id}>
+              <div className="cart-item-inner-div">
+                <img src={item.imgSrc} alt={companyLogo}></img>
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      columnGap: "5px",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <p>{item.name}</p>
+                    <p>{item.quantity + "x"}</p>
+                  </div>
+                  <p>{item.price + "₾"}</p>
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  columnGap: "4px",
+                  alignItems: "center",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faPlus}
+                  onClick={() => increment(getItemIdentifier(item))}
+                />
+                <FontAwesomeIcon
+                  icon={faMinus}
+                  onClick={() => reduce(getItemIdentifier(item))}
+                />
               </div>
             </div>
-            <FontAwesomeIcon icon={faMinus} />
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+      <button className="buy-items-btn" onClick={purchaseItem}>
+        შეძენა
+      </button>
     </div>
   );
-
   //
 
   return (
@@ -220,7 +287,6 @@ export default function NavComponent({
           <Input.Search
             placeholder="მოძებნე პროდუქტი"
             style={{ minWidth: "320px", maxWidth: "550px", width: "75%" }}
-            // onSearch={handleSearch}
             enterButton={
               <Button
                 type="primary"
@@ -233,6 +299,7 @@ export default function NavComponent({
                 ძებნა
               </Button>
             }
+            onSearch={handleSearch}
           />
         </div>
         <div
