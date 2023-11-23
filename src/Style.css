@@ -274,9 +274,9 @@
   box-sizing: border-box;
   margin-top: 25px;
   max-height: 400px;
-  overflow-y: scroll;
   height: 80%;
   width: 100%;
+  overflow: auto;
 }
 .cart-item {
   display: flex;
@@ -345,7 +345,7 @@
   border-radius: 15px;
 }
 .buy-items-btn:hover {
-  opacity: 0.8
+  opacity: 0.8;
 }
 /*  */
 
@@ -413,7 +413,7 @@
   display: flex;
   padding: 15px 10px 15px 10px;
   position: absolute;
-  bottom: 0.1px;
+  bottom: 0px;
   align-items: center;
   justify-content: space-between;
   background-color: #353f49;
@@ -465,8 +465,6 @@
 }
 /*  */
 
-
-
 /* Contact */
 .About {
   width: 100%;
@@ -482,4 +480,76 @@
   min-width: 340px;
 }
 
+/*  */
+
+/* Contact */
+.Contact-Component {
+  width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.Contact-Component p {
+  font-weight: 800;
+}
+.Contact-Component form {
+  margin-top: 6px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+}
+.Contact-Component form input {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #eceef0;
+  padding: 6px;
+  padding-bottom: 12px;
+  box-sizing: border-box;
+}
+.Contact-Component form input::placeholder {
+  font-size: 12px;
+}
+.Contact-Component form textarea {
+  resize: none;
+  height: 150px;
+  overflow: auto;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid #bec4cb;
+  border-radius: 7px;
+  overflow: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.Contact-Component form textarea::-webkit-scrollbar {
+  width: 12px;
+}
+
+.Contact-Component form textarea::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.Contact-Component .deactive {
+  align-self: flex-end;
+  border-radius: 8px;
+  background: #eceef0;
+  border: none;
+  font-weight: 300;
+  padding: 5px 15px 5px 15px;
+}
+.Contact-Component .active {
+  align-self: flex-end;
+  border-radius: 8px;
+  background: #3d80eb;
+  border: none;
+  font-weight: 300;
+  padding: 5px 15px 5px 15px;
+  color: white;
+}
+.Contact-Component .active:hover {
+  opacity: 0.8;
+}
 /*  */

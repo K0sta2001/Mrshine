@@ -118,7 +118,10 @@ export default function NavComponent({
             setCartItems((prevItems) => {
               const updatedItems = prevItems.map((item) =>
                 getItemIdentifier(item) === itemId
-                  ? { ...item, quantity: Math.max((item.quantity || 1) - 1, 0) }
+                  ? {
+                      ...item,
+                      quantity: Math.max((item.quantity || 1) - 1, 0),
+                    }
                   : item
               );
 
@@ -172,11 +175,13 @@ export default function NavComponent({
           );
         })}
       </div>
+
       <button className="buy-items-btn" onClick={purchaseItem}>
         შეძენა
       </button>
     </div>
   );
+
   //
 
   return (
@@ -221,7 +226,11 @@ export default function NavComponent({
               <Nav.Link as={Link} to="/about">
                 ჩვენს შესახებ
               </Nav.Link>
-              <Nav.Link onClick={()=>{setIsContactFormVisibleFunc()}}>
+              <Nav.Link
+                onClick={() => {
+                  setIsContactFormVisibleFunc();
+                }}
+              >
                 კონტაქტი
               </Nav.Link>
             </div>
