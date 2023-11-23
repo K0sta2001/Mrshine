@@ -1,5 +1,6 @@
 import Popup from "./Reusable/Popup";
 import { useState, useEffect, useRef } from "react";
+import { sendEmail } from "./lib/SMTP";
 
 export default function Contact({ formVisible, setIsContactFormVisibleFunc }) {
   const [name, setName] = useState(null);
@@ -7,6 +8,8 @@ export default function Contact({ formVisible, setIsContactFormVisibleFunc }) {
   const [pNumber, setPNumber] = useState(null);
   const [text, setText] = useState(null);
   const [sendMessageActive, setSendMessageActive] = useState("deactive");
+  // env
+  const apiKey = process.env.REACT_APP_ELASTIC_EMAIL_API_KEY;
 
   const formInputs = [
     {
@@ -76,7 +79,23 @@ export default function Contact({ formVisible, setIsContactFormVisibleFunc }) {
   const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
   const handleSend = (className) => {
     if (className === "active") {
-      setSuccessVisibility(true);
+      sendEmail(
+        apiKey,
+        "Mrshine.ge@gmail.com",
+        "საიტიდან შეკითხვა",
+        "Mrshine.ge@gmail.com",
+        `
+        ${name} 
+        ${lastName} 
+        ${pNumber}
+        ${text}`
+      )
+        .then((res) => {
+          if (res) {
+            setSuccessVisibility(true);
+          }
+        })
+        .catch((err) => console.log(err));
     } else {
       console.log("please fill in all the forms");
       warning.current.style.opacity = "1";
