@@ -11,7 +11,7 @@ export default function Home({
 }) {
   const shoppingGoods = [
     {
-      id: 1,
+      id: 15232,
       imgSrc: logo,
       name: "პროდუქტი 1",
       description: "ძალიან კარგი პროდუქტი",
@@ -23,7 +23,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 2,
+      id: 232432,
       imgSrc: logo,
       name: "პროდუქტი 2",
       description: "ძალიან კარგი პროდუქტი",
@@ -35,7 +35,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 3,
+      id: 332423432,
       imgSrc: logo,
       name: "პროდუქტი 3",
       description: "ძალიან კარგი პროდუქტი",
@@ -47,7 +47,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 4,
+      id: 432432,
       imgSrc: logo,
       name: "პროდუქტი 4",
       description: "ძალიან კარგი პროდუქტი",
@@ -59,7 +59,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 5,
+      id: 5324324,
       imgSrc: logo,
       name: "პროდუქტი 5",
       description: "ძალიან კარგი პროდუქტი",
@@ -71,7 +71,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 6,
+      id: 63243242,
       imgSrc: logo,
       name: "პროდუქტი 6",
       description: "ძალიან კარგი პროდუქტი",
@@ -83,7 +83,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 7,
+      id: 7324324,
       imgSrc: logo,
       name: "პროდუქტი 7",
       description: "ძალიან კარგი პროდუქტი",
@@ -95,7 +95,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 8,
+      id: 823432,
       imgSrc: logo,
       name: "პროდუქტი 8",
       description: "ძალიან კარგი პროდუქტი",
@@ -107,7 +107,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 9,
+      id: 9234342,
       imgSrc: logo,
       name: "პროდუქტი 9",
       description: "ძალიან კარგი პროდუქტი",
@@ -119,7 +119,7 @@ export default function Home({
       inStock: false,
     },
     {
-      id: 10,
+      id: 1032432432,
       imgSrc: logo,
       name: "პროდუქტი 10",
       description: "ძალიან კარგი პროდუქტი",
@@ -131,7 +131,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 11,
+      id: 1132423,
       imgSrc: logo,
       name: "პროდუქტი 11",
       description: "ძალიან კარგი პროდუქტი",
@@ -143,7 +143,7 @@ export default function Home({
       inStock: false,
     },
     {
-      id: 12,
+      id: 1232423432,
       imgSrc: logo,
       name: "პროდუქტი 12",
       description: "ძალიან კარგი პროდუქტი",
@@ -155,7 +155,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 13,
+      id: 1343543543,
       imgSrc: logo,
       name: "პროდუქტი 13",
       description: "ძალიან კარგი პროდუქტი",
@@ -167,7 +167,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 14,
+      id: 14634643,
       imgSrc: logo,
       name: "პროდუქტი 14",
       description: "ძალიან კარგი პროდუქტი",
@@ -179,7 +179,7 @@ export default function Home({
       inStock: false,
     },
     {
-      id: 15,
+      id: 152462532,
       imgSrc: logo,
       name: "პროდუქტი 15",
       description: "ძალიან კარგი პროდუქტი",
@@ -191,7 +191,7 @@ export default function Home({
       inStock: true,
     },
     {
-      id: 16,
+      id: 1643643634,
       imgSrc: logo,
       name: "პროდუქტი 16",
       description: "ძალიან კარგი პროდუქტი",
@@ -384,7 +384,7 @@ export default function Home({
                   className={`shopping-good ${
                     item.inStock ? "" : "out-of-stock"
                   }`}
-                  key={item.id + Math.random() + index}
+                  key={item.id + index}
                   id={item.id}
                   onClick={() => showItemInfo(item)}
                 >
