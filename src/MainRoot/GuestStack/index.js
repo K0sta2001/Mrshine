@@ -57,7 +57,7 @@ export default function GuestStack() {
             />
           }
         ></Route>
-        <Route path="/about" element={<About />}></Route>
+        <Route path="about" element={<About />}></Route>
       </Routes>
       <Contact
         formVisible={isContactFormVisible}
