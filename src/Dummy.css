@@ -3,16 +3,6 @@
   height: 25px;
 }
 
-
-
-
-
-
-
-
-
-
-
 /* Admin */
 .admin-login-container {
   width: 100%;
@@ -71,5 +61,52 @@
   cursor: pointer;
 }
 .admin-login-form button:hover {
-  opacity: 0.8
+  opacity: 0.8;
+}
+
+.Admin-Headers {
+  max-height: 120px;
+  width: 100%;
+  background-color: rgb(42, 121, 186);
+  display: flex;
+  padding: 10px 20px 10px 20px;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.Admin-Headers img {
+  width: 80px;
+}
+.Admin-Headers div {
+  display: flex;
+  column-gap: 70px;
+  z-index: 15;
+}
+.Admin-Headers div a {
+  cursor: pointer;
+  text-decoration: none;
+}
+.Admin-Headers div a:hover {
+  opacity: 1 !important;
+}
+.Admin-Headers p,
+.Admin-Headers a {
+  color: white;
+}
+
+@media screen and (max-width: 860px) {
+  .Admin-Headers div {
+    flex-direction: column;
+    column-gap: 0;
+    row-gap: 10px;
+    align-items: center;
+    position: absolute;
+    top: 100px;
+    left: 0;
+    background-color: rgb(50, 93, 128);
+    z-index: 20
+  }
+  .Admin-Headers img {
+    cursor: pointer;
+  }
 }
