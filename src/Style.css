@@ -355,7 +355,7 @@
   width: 100%;
   padding: 5px 0 5px 0;
   display: flex;
-  column-gap: 16px;
+  column-gap: 46px;
   max-height: 500px;
 }
 @media screen and (max-width: 500px) {
@@ -402,8 +402,12 @@
 .shopping-good-info-description {
   max-height: 350px;
   min-width: 190px;
-  text-wrap: wrap;
   font-weight: 500;
+  word-wrap: break-word;
+  text-align: center;
+  max-width: 240px;
+  overflow-y: auto;
+  max-height: 220px;
 }
 /*  */
 

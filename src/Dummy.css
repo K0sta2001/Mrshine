@@ -104,9 +104,55 @@
     top: 100px;
     left: 0;
     background-color: rgb(50, 93, 128);
-    z-index: 20
+    z-index: 20;
   }
   .Admin-Headers img {
     cursor: pointer;
   }
+}
+.Admin-Products {
+  display: flex;
+  padding: 40px 30px 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.Admin-Products-Container {
+  width: 100%;
+  display: flex;
+  column-gap: 29px;
+  row-gap: 25px;
+  margin-top: 55px;
+  overflow-x: hidden;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.CRUD-input {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  text-align: center;
+}
+.admin-p-label {
+  position: absolute;
+  left: 93px;
+}
+@media screen and (max-width: 500px) {
+  .admin-p-label {
+    display: none;
+  }
+  #CRUD-input-price {
+    transform: translateX(20px);
+  }
+  #CRUD-input-name {
+    width: 100% !important;
+    max-width: 500px;
+  }
+}
+#CRUD-input-description {
+  resize: none;
+  text-align: center;
+  max-height: 330px;
+  overflow-y: auto;
+  margin-top: 20px;
 }
