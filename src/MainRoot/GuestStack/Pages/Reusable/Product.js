@@ -1,10 +1,11 @@
 import logo from "../../../../Images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbtack, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Select } from "antd";
+import { Cloudinary } from "cloudinary-core";
 
-const Product = ({ item, showItemInfo, addItemToCart, index }) => {
+const Product = ({ item, showItemInfo, addItemToCart, forAdmin }) => {
   return (
     <div
       className={`shopping-good ${item.inStock ? "" : "out-of-stock"}`}
@@ -67,7 +68,9 @@ const Product = ({ item, showItemInfo, addItemToCart, index }) => {
             </p>
             {item.reducedPricePercentage ? (
               <p className="shopping-good-price">
-                {(item.price * (100 - item.reducedPricePercentage)) / 100 + "₾"}
+                {Math.ceil(
+                  (item.price * (100 - item.reducedPricePercentage)) / 100
+                ) + "₾"}
               </p>
             ) : (
               ""
@@ -77,6 +80,7 @@ const Product = ({ item, showItemInfo, addItemToCart, index }) => {
         <FontAwesomeIcon
           icon={faShoppingCart}
           alt="add"
+          style={{ display: forAdmin ? "none" : "" }}
           className="shopping-cart-add"
           onClick={(event) => {
             event.stopPropagation();
@@ -97,7 +101,6 @@ const ProductInfo = (
   price,
   reducedPricePercentage,
   description,
-  category,
   code,
   inStock,
   addItemToCart,
@@ -106,6 +109,12 @@ const ProductInfo = (
   handleCategoryValueChange,
   categoryValue
 ) => {
+  // dependencies:
+  const cloudinary = new Cloudinary({
+    cloud_name: "diix3vysb",
+    api_key: "615983744719867",
+  });
+
   // handling value changes for admin
   // values:
 
@@ -125,17 +134,40 @@ const ProductInfo = (
     }
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImageSrc(reader.result);
-      setUploadMode(false);
-    };
 
     if (file) {
-      reader.readAsDataURL(file);
+      try {
+        // Upload image to Cloudinary
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "mrShine"); // Replace with your Cloudinary upload preset
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${
+            cloudinary.config().cloud_name
+          }/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to upload image: ${response.statusText}`);
+        }
+
+        const responseData = await response.json();
+
+        // Set the Cloudinary URL to display the image
+        const imageUrl = responseData.secure_url;
+        setImageSrc(imageUrl);
+        setUploadMode(false);
+        console.log(responseData)
+      } catch (error) {
+        console.error("Error uploading image to Cloudinary:", error);
+      }
     }
   };
   //
@@ -143,12 +175,14 @@ const ProductInfo = (
   // price
   const [priceValue, setPriceValue] = useState("");
   const handlePriceValueChange = (e) => {
-    setPriceValue(e.target.value);
+    const newValue = e.target.value.replace(/\D/g, "");
+    const limitedValue = newValue.slice(0, 5);
+    setPriceValue(Number(limitedValue));
   };
   //
 
   // discount
-  const [reducedPriceInputValue, setReducedPriceInputValue] = useState("");
+  const [reducedPriceInputValue, setReducedPriceInputValue] = useState(0);
 
   const handleReducedPriceInputValueChange = (e) => {
     let userInput = e.target.value.replace(/[^0-9]/g, "");
@@ -188,7 +222,7 @@ const ProductInfo = (
           <label style={{ cursor: "pointer" }}>
             <img
               src={imageSrc || imgSrc}
-              alt={logo}
+              alt={imageSrc || imgSrc}
               onClick={handleImageClick}
               style={{
                 width: "130px",
@@ -368,9 +402,10 @@ const ProductInfo = (
         >
           {forAdmin ? (
             <Select
-              value={!categoryValue ? category : categoryValue}
+              value={categoryValue}
               style={{ width: 200 }}
               onChange={handleCategoryValueChange}
+              placeholder="კატეგორია"
             >
               <CategoryOption value="ელექტრო პროდუქცია">
                 ელექტრო პროდუქცია
@@ -386,12 +421,13 @@ const ProductInfo = (
               <CategoryOption value="სხვადასხვა">სხვადასხვა</CategoryOption>
             </Select>
           ) : (
-            <p>კატეგორია: {category}</p>
+            <p>კატეგორია: {categoryValue}</p>
           )}
           {forAdmin ? (
             <textarea
               className="CRUD-input"
               id="CRUD-input-description"
+              placeholder="აღწერა"
               value={descriptionValue ? descriptionValue : description}
               onChange={handleDescriptionValueChange}
             ></textarea>
@@ -399,7 +435,22 @@ const ProductInfo = (
             <div className="shopping-good-info-description">{description}</div>
           )}
         </div>
-        <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p>
+        {forAdmin ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+              width: "100%",
+            }}
+          >
+            {/* <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p> */}
+            <button className="buy-items-btn">შენახვა</button>
+          </div>
+        ) : (
+          // <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p>
+          ""
+        )}
       </div>
     </div>
   );

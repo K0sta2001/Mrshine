@@ -248,12 +248,6 @@ export default function Home({
 
   //
 
-  // delete later
-  const [categoryValue, setCategoryValue] = useState(null);
-  const handleCategoryValueChange = (value) => {
-    setCategoryValue(value);
-  };
-
   // Bad code on line 349. Fix it later.
   return (
     <div className="Home">
@@ -313,7 +307,6 @@ export default function Home({
       <Popup
         visible={isItemInfoVisible}
         onClose={() => {
-          setCategoryValue(null);
           closeItemInfo();
         }}
         modalClass="item-info-popup-component"
@@ -329,9 +322,7 @@ export default function Home({
           chosenItem?.inStock,
           addItemToCart,
           chosenItem,
-          true,
-          handleCategoryValueChange, // delete later
-          categoryValue // delete later
+          false
         )}
       />
     </div>
