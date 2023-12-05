@@ -126,6 +126,7 @@
   overflow-x: hidden;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
 }
 .CRUD-input {
   outline: none;

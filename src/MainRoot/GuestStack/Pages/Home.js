@@ -247,7 +247,6 @@ export default function Home({
   };
 
   //
-
   // Bad code on line 349. Fix it later.
   return (
     <div className="Home">
@@ -317,9 +316,9 @@ export default function Home({
           chosenItem?.price,
           chosenItem?.reducedPricePercentage,
           chosenItem?.description,
-          chosenItem?.category,
           chosenItem?.code,
           chosenItem?.inStock,
+          chosenItem?.ispinned,
           addItemToCart,
           chosenItem,
           false

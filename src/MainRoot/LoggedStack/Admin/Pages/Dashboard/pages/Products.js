@@ -9,6 +9,7 @@ import Popup from "../../../../../GuestStack/Pages/Reusable/Popup";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const [chosenItem, setChosenItem] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,7 +17,9 @@ export default function Products() {
       try {
         setLoading(true);
 
-        const response = await fetch("http://localhost:8002/user/products");
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVER_URI}/user/products`
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -40,22 +43,39 @@ export default function Products() {
   };
 
   // item info CRUD
-  const [isItemInfoVisible, setIsItemInfoVisible] = useState(false);
+  const [isCreationPopupVisible, setIsCreationPopupVisible] = useState(false);
+  const [isItemInfoVisible, setIsItemInfoVisible] = useState(null);
+
+  useEffect(() => {
+    if (isItemInfoVisible) {
+      setCategoryValue(chosenItem.category);
+    } else {
+      setCategoryValue(null);
+    }
+  }, [chosenItem, isItemInfoVisible]);
+
 
   return (
     <div className="Admin-Products">
-      <p>Products</p>
+      <p>პროდუქტები</p>
       <div className="Admin-Products-Container">
         {loading ? (
           <Spin size="large" />
         ) : (
           products?.map((item, index) => (
-            <Product item={item} key={item._id + index} />
+            <Product
+              item={item}
+              showItemInfo={() => {
+                setIsItemInfoVisible(true);
+                setChosenItem(item);
+              }}
+              key={item._id + index}
+            />
           ))
         )}
         <div
           onClick={() => {
-            setIsItemInfoVisible(true);
+            setIsCreationPopupVisible(true);
           }}
           style={{
             border: "1px solid #1890ff",
@@ -81,10 +101,10 @@ export default function Products() {
         </div>
       </div>
       <Popup
-        visible={isItemInfoVisible}
+        visible={isCreationPopupVisible}
         onClose={() => {
           setCategoryValue(null);
-          setIsItemInfoVisible(false);
+          setIsCreationPopupVisible(false);
         }}
         modalClass="item-info-popup-component"
         children={ProductInfo(
@@ -96,11 +116,38 @@ export default function Products() {
           "",
           "",
           true,
+          true,
           "",
           "",
           true,
           handleCategoryValueChange,
-          categoryValue
+          categoryValue,
+          "C"
+        )}
+      />
+      <Popup
+        visible={isItemInfoVisible}
+        onClose={() => {
+          setIsItemInfoVisible(false);
+          setChosenItem(null);
+        }}
+        children={ProductInfo(
+          chosenItem?._id,
+          chosenItem?.name,
+          chosenItem?.imgSrc,
+          chosenItem?.price,
+          chosenItem?.reducedPricePercentage,
+          chosenItem?.description,
+          chosenItem?.code,
+          chosenItem?.inStock,
+          chosenItem?.ispinned,
+          null,
+          chosenItem,
+          true,
+          handleCategoryValueChange,
+          categoryValue,
+          "I",
+          isItemInfoVisible
         )}
       />
     </div>

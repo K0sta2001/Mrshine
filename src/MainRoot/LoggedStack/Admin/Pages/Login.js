@@ -3,7 +3,11 @@ import { useState } from "react";
 // Static images
 import companyLogo from "../../../../Images/logo.png";
 
-export default function Login({ login }) {
+export default function Login({
+  login,
+  loginButtonDisabled,
+  areCreditentialsWrong,
+}) {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
 
@@ -29,9 +33,25 @@ export default function Login({ login }) {
               setPassword(e.target.value);
             }}
           />
-          <button type="button" onClick={()=>login(userName, password)}>
+          <button
+            type="button"
+            onClick={() => login(userName, password)}
+            style={{ opacity: loginButtonDisabled ? 0.5 : "" }}
+            disabled={loginButtonDisabled}
+          >
             შესვლა
           </button>
+          <p
+            style={{
+              display: areCreditentialsWrong ? "block" : "none",
+              alignSelf: "center",
+              fontSize: "14px",
+              fontWeight: 400,
+              color: "rgba(204, 50, 80, 0.8)",
+            }}
+          >
+            არასწორი მონაცემები
+          </p>
         </div>
       </form>
     </div>

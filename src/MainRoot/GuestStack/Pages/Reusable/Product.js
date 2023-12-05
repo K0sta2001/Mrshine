@@ -1,7 +1,7 @@
 import logo from "../../../../Images/logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbtack, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Select } from "antd";
 import { Cloudinary } from "cloudinary-core";
 
@@ -103,29 +103,33 @@ const ProductInfo = (
   description,
   code,
   inStock,
+  isPinned,
   addItemToCart,
   chosenItem,
   forAdmin,
   handleCategoryValueChange,
-  categoryValue
+  categoryValue,
+  create_or_update,
+  isItemInfoVisible
 ) => {
   // dependencies:
   const cloudinary = new Cloudinary({
-    cloud_name: "diix3vysb",
-    api_key: "615983744719867",
+    cloud_name: process.env.REACT_APP_CLOUD_NAME,
+    api_key: process.env.REACT_APP_API_KEY,
   });
 
   // handling value changes for admin
   // values:
 
   // name
-  const [nameValue, setNameValue] = useState(null);
+  const [nameValue, setNameValue] = useState(name);
   const handleNameValueChange = (e) => {
     setNameValue(e.target.value);
   };
   //
 
   // img
+  const [imageObject, setImageObject] = useState(null);
   const [imageSrc, setImageSrc] = useState("");
   const [uploadMode, setUploadMode] = useState(false);
   const handleImageClick = () => {
@@ -134,15 +138,25 @@ const ProductInfo = (
     }
   };
 
-  const handleFileChange = async (e) => {
+  const handleImageObjectChange = (e) => {
     const file = e.target.files[0];
+    setImageObject(file);
 
     if (file) {
+      const objectURL = URL.createObjectURL(file);
+      setImageSrc(objectURL);
+    }
+  };
+  const handleImgUploadToCloud = async () => {
+    if (imageObject) {
       try {
-        // Upload image to Cloudinary
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "mrShine"); // Replace with your Cloudinary upload preset
+
+        const compressedImage = await compressImage(imageObject);
+
+        formData.append("file", compressedImage);
+
+        formData.append("upload_preset", process.env.REACT_APP_UPLOAD_PRESET);
 
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${
@@ -159,21 +173,47 @@ const ProductInfo = (
         }
 
         const responseData = await response.json();
-
-        // Set the Cloudinary URL to display the image
         const imageUrl = responseData.secure_url;
-        setImageSrc(imageUrl);
-        setUploadMode(false);
-        console.log(responseData)
+
+        return imageUrl;
       } catch (error) {
         console.error("Error uploading image to Cloudinary:", error);
+        return null;
       }
     }
+
+    return null;
+  };
+
+  // compress img to reduce size
+  const compressImage = async (image) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(image);
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+        canvas.toBlob(
+          (blob) => {
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.7
+        );
+      };
+    });
   };
   //
 
   // price
-  const [priceValue, setPriceValue] = useState("");
+  const [priceValue, setPriceValue] = useState(price);
   const handlePriceValueChange = (e) => {
     const newValue = e.target.value.replace(/\D/g, "");
     const limitedValue = newValue.slice(0, 5);
@@ -198,7 +238,7 @@ const ProductInfo = (
   //
 
   // description
-  const [descriptionValue, setDescriptionValue] = useState("");
+  const [descriptionValue, setDescriptionValue] = useState(description);
 
   const handleDescriptionValueChange = (e) => {
     setDescriptionValue(e.target.value);
@@ -212,8 +252,126 @@ const ProductInfo = (
   //
 
   // in stock
-  const [inStockValue, setInStockValue] = useState(null);
+  const [inStockValue, setInStockValue] = useState(chosenItem?.inStock);
+  const handleInStockValueChange = () => {
+    setInStockValue(!inStockValue);
+  };
   //
+
+  // is pinned
+  const [isPinnedValue, setIsPinnedValue] = useState(isPinned);
+  const handleIsPinnedValueChange = () => {
+    setIsPinnedValue(!isPinnedValue);
+  };
+  //
+
+  const C_or_I = async (C_or_I) => {
+    if (C_or_I === "C") {
+      try {
+        const uploadedImageSrc = await handleImgUploadToCloud();
+
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVER_URI}/admin/productscreate`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: nameValue,
+              price: priceValue,
+              description: descriptionValue,
+              imgSrc: uploadedImageSrc,
+              reducedPricePercentage: reducedPriceInputValue,
+              isPinned: true, // fix
+              category: categoryValue,
+              code: "0000",
+              inStock: false, // fix
+            }),
+          }
+        );
+
+        if (response.ok) {
+          console.log("Product created successfully!");
+          window.location.reload();
+        } else {
+          console.error("Failed to create product.");
+        }
+      } catch (error) {
+        console.error("Error creating product:", error);
+      }
+    } else {
+      try {
+        const uploadedImageSrc = imageSrc
+          ? await handleImgUploadToCloud()
+          : null;
+
+        const response = await fetch(
+          `${process.env.REACT_APP_SERVER_URI}/admin/productsupdate`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              _id: id,
+              name: nameValue,
+              price: priceValue,
+              description: descriptionValue,
+              imgSrc: uploadedImageSrc ? uploadedImageSrc : imgSrc,
+              reducedPricePercentage: reducedPriceInputValue,
+              isPinned: true, // fix
+              category: categoryValue,
+              code: "0000",
+              inStock: false, // fix
+            }),
+          }
+        );
+
+        if (response.ok) {
+          console.log("Product changed successfully!");
+          window.location.reload();
+        } else {
+          console.error("Failed to change product.");
+        }
+      } catch (error) {
+        console.error("Error changing product:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    console.log(chosenItem?.inStock, chosenItem?.isPinned);
+  }, [chosenItem]);
+  // resetting values for Product-s
+  const [testId, setTestId] = useState(null);
+  useEffect(() => {
+    if (isItemInfoVisible === false) {
+      setTestId(id);
+    }
+    if (!testId) {
+      if (testId !== id) {
+        setNameValue(name);
+        setPriceValue(price);
+        setReducedPriceInputValue(reducedPricePercentage);
+        setDescriptionValue(description);
+        setInStockValue(inStock);
+        setIsPinnedValue(isPinned);
+        setImageSrc(imgSrc);
+      }
+    }
+  }, [
+    id,
+    isItemInfoVisible,
+    name,
+    price,
+    reducedPricePercentage,
+    description,
+    inStock,
+    isPinned,
+    imgSrc,
+    testId,
+  ]);
 
   return (
     <div className="shopping-good-info" id={id}>
@@ -235,7 +393,7 @@ const ProductInfo = (
                 type="file"
                 accept="image/*"
                 style={{ display: "none" }}
-                onChange={handleFileChange}
+                onChange={handleImageObjectChange}
               />
             )}
           </label>
@@ -309,7 +467,7 @@ const ProductInfo = (
                   id="CRUD-input-price"
                   style={{ maxWidth: 90, width: "50%" }}
                   onChange={handlePriceValueChange}
-                  value={priceValue ? priceValue : price}
+                  value={priceValue || priceValue === 0 ? priceValue : price}
                 ></input>
                 <p className="admin-p-label">₾</p>
               </div>
@@ -345,30 +503,59 @@ const ProductInfo = (
             }}
           >
             {forAdmin ? (
-              <p
-                style={{ fontWeight: "400", cursor: "pointer" }}
-                onClick={() =>
-                  setInStockValue((inStock) => {
-                    if (inStockValue === null) {
-                      inStock = !inStock; // could be better
-                      return !inStock;
-                    } else {
-                      return !inStockValue;
-                    }
-                  })
-                }
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                {inStockValue !== null
-                  ? inStockValue
+                <p
+                  style={{ fontWeight: "400", cursor: "pointer" }}
+                  onClick={() =>
+                    setInStockValue((inStock) => {
+                      handleInStockValueChange();
+                      if (inStockValue === null) {
+                        inStock = !inStock; // could be better
+                        return !inStock;
+                      } else {
+                        return !inStockValue;
+                      }
+                    })
+                  }
+                >
+                  {inStockValue !== null
+                    ? inStockValue
+                      ? "მარაგშია"
+                      : "ამოიწურა"
+                    : inStock
                     ? "მარაგშია"
-                    : "ამოიწურა"
-                  : inStock
-                  ? "მარაგშია"
-                  : "ამოიწურა"}
-              </p>
+                    : "ამოიწურა"}
+                </p>
+                <p
+                  style={{ fontWeight: "400", cursor: "pointer" }}
+                  onClick={() =>
+                    setIsPinnedValue((isPinned) => {
+                      handleIsPinnedValueChange();
+                      if (isPinnedValue === null) {
+                        isPinned = !isPinned;
+                        return !isPinned;
+                      } else {
+                        return !isPinnedValue;
+                      }
+                    })
+                  }
+                >
+                  {chosenItem?.isPinned ? "დაპინულია" : "არაა დაპინული"}
+                </p>
+              </div>
             ) : (
               <p style={{ fontWeight: "400" }}>
-                {inStock ? "მარაგშია" : "ამოიწურა"}
+                {(inStockValue !== undefined) & chosenItem?.inStock
+                  ? "მარაგშია"
+                  : inStockValue
+                  ? "მარაგშია"
+                  : "ამოიწურა"}
               </p>
             )}
 
@@ -428,7 +615,11 @@ const ProductInfo = (
               className="CRUD-input"
               id="CRUD-input-description"
               placeholder="აღწერა"
-              value={descriptionValue ? descriptionValue : description}
+              value={
+                descriptionValue || descriptionValue === ""
+                  ? descriptionValue
+                  : description
+              }
               onChange={handleDescriptionValueChange}
             ></textarea>
           ) : (
@@ -445,7 +636,12 @@ const ProductInfo = (
             }}
           >
             {/* <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p> */}
-            <button className="buy-items-btn">შენახვა</button>
+            <button
+              className="buy-items-btn"
+              onClick={() => C_or_I(create_or_update)}
+            >
+              შენახვა
+            </button>
           </div>
         ) : (
           // <p style={{ fontWeight: "800", marginTop: "12px" }}>კოდი: {code}</p>

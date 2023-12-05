@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./Pages/Login";
 import Dashboard from "./Pages/Dashboard";
 import { Routes, Route } from "react-router-dom";
 
 export default function AdminStack() {
   const [isTokenValid, setIsTokenValid] = useState(false);
+  const [creditentialsWrong, setCreditantialsWrong] = useState(false);
+  const [counterLoginSpam, setCounterLoginSpam] = useState(false);
 
   const login = (userName, password) => {
-    fetch("http://localhost:8002/auth/loginadmin", {
+    fetch(`${process.env.REACT_APP_SERVER_URI}/auth/loginadmin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,14 +19,27 @@ export default function AdminStack() {
         password: password,
       }),
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`არასწორი მონაცემები`);
+        }
+        return response.json();
+      })
       .then((data) => {
-        localStorage.setItem("@accessToken", JSON.stringify(data));
-        window.location.pathName = process.env.REACT_APP_ADMIN_PATH+"/Dashboard";
-        setIsTokenValid(true);
+        if (data.token) {
+          localStorage.setItem("@accessToken", JSON.stringify(data));
+          window.location.pathName =
+            process.env.REACT_APP_ADMIN_PATH + "/Dashboard";
+          setIsTokenValid(true);
+        }
       })
       .catch((error) => {
-        console.error("Error:", error);
+        setCreditantialsWrong(true);
+        setCounterLoginSpam(true);
+        setTimeout(() => {
+          setCreditantialsWrong(false);
+          setCounterLoginSpam(false);
+        }, [3000]);
       });
   };
 
@@ -42,7 +57,7 @@ export default function AdminStack() {
             return;
           }
           const response = await fetch(
-            "http://localhost:8002/auth/checkadmintoken",
+            `${process.env.REACT_APP_SERVER_URI}/auth/checkadmintoken`,
             {
               method: "GET",
               headers: {
@@ -70,7 +85,7 @@ export default function AdminStack() {
         setIsTokenValid(true);
       })
       .catch((error) => {
-        console.error(error);
+        return;
       });
   }, []);
 
@@ -83,7 +98,16 @@ export default function AdminStack() {
   } else {
     return (
       <Routes>
-        <Route path="*" element={<Login login={login} />}></Route>
+        <Route
+          path="*"
+          element={
+            <Login
+              login={login}
+              loginButtonDisabled={counterLoginSpam}
+              areCreditentialsWrong={creditentialsWrong}
+            />
+          }
+        ></Route>
       </Routes>
     );
   }
